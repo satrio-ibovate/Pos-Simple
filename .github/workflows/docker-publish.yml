@@ -96,3 +96,6 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+      - name: Trigger Coolify Webhook
+        if: ${{ github.event_name != 'pull_request' }}
+        run: curl -s "http://43.156.110.103:8000/api/v1/deploy?uuid=lcaf8yzp63uja44xoo8ic3ho&force=false"
