@@ -59,9 +59,9 @@ export default function POSPage() {
                   toast("Added to Order", { description: product.name });
                 }}
               >
-                <div className="aspect-square rounded-lg bg-[#fafafa] flex items-center justify-center text-5xl mb-4 group-hover:scale-[1.02] transition-transform relative">
-                  {product.image}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                <div className="aspect-square rounded-lg bg-[#fafafa] flex items-center justify-center overflow-hidden mb-4 group-hover:scale-[1.02] transition-transform relative">
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-sm">
                       <Plus className="h-4 w-4 text-[#111]" />
                     </div>
@@ -100,8 +100,8 @@ export default function POSPage() {
             <div className="space-y-5">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4">
-                  <div className="h-14 w-14 bg-[#fafafa] border border-[#eaeaea] rounded-lg flex items-center justify-center text-2xl shrink-0">
-                    {item.image}
+                  <div className="h-14 w-14 bg-[#fafafa] border border-[#eaeaea] rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0 py-1">
                     <p className="font-medium text-[14px] text-[#111] truncate">{item.name}</p>

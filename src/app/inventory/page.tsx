@@ -56,8 +56,8 @@ export default function InventoryPage() {
             {filteredProducts.map((product) => (
               <TableRow key={product.id} className="border-[#eaeaea] hover:bg-[#fafafa]/50 transition-colors">
                 <TableCell>
-                  <div className="h-10 w-10 bg-[#fafafa] border border-[#eaeaea] rounded-md flex items-center justify-center text-xl">
-                    {product.image}
+                  <div className="h-10 w-10 bg-[#fafafa] border border-[#eaeaea] rounded-md overflow-hidden flex items-center justify-center">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                   </div>
                 </TableCell>
                 <TableCell className="font-medium text-[#111]">{product.name}</TableCell>
