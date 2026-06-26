@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { mockProducts } from "@/lib/mockData";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -10,8 +9,27 @@ import { Button } from "@/components/ui/button";
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
   
-  const filteredProducts = mockProducts.filter(p => 
+  const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(search.toLowerCase()) || 
     p.category.toLowerCase().includes(search.toLowerCase())
   );
@@ -53,7 +71,11 @@ export default function InventoryPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredProducts.map((product) => (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-10 text-[#888]">Loading products...</TableCell>
+              </TableRow>
+            ) : filteredProducts.map((product) => (
               <TableRow key={product.id} className="border-[#eaeaea] hover:bg-[#fafafa]/50 transition-colors">
                 <TableCell>
                   <div className="h-10 w-10 bg-[#fafafa] border border-[#eaeaea] rounded-md overflow-hidden flex items-center justify-center">

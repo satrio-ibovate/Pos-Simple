@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { mockProducts, mockCategories } from "@/lib/mockData";
+import { useState, useEffect } from "react";
+import { mockCategories } from "@/lib/mockData";
 import { useCartStore } from "@/store/useCartStore";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,18 +11,52 @@ import { toast } from "sonner";
 
 export default function POSPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { items, addItem, updateQuantity, clearCart, total, subtotal, tax } = useCartStore();
 
-  const filteredProducts = activeCategory === "All" 
-    ? mockProducts 
-    : mockProducts.filter(p => p.category === activeCategory);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const handleCheckout = () => {
+  const filteredProducts = activeCategory === "All" 
+    ? products 
+    : products.filter(p => p.category === activeCategory);
+
+  const handleCheckout = async () => {
     if (items.length === 0) return;
-    toast.success("Transaction Complete", {
-      description: `Payment of Rp ${total().toLocaleString('id-ID')} processed successfully.`,
-    });
-    clearCart();
+    
+    try {
+      const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, amount: total() })
+      });
+      
+      if (res.ok) {
+        toast.success("Transaction Complete", {
+          description: `Payment of Rp ${total().toLocaleString('id-ID')} processed successfully.`,
+        });
+        clearCart();
+      } else {
+        toast.error("Transaction Failed");
+      }
+    } catch (error) {
+      toast.error("An error occurred");
+    }
   };
 
   return (
@@ -49,9 +83,12 @@ export default function POSPage() {
 
         {/* Product Grid */}
         <ScrollArea className="flex-1 -mx-2 px-2">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
-            {filteredProducts.map((product) => (
-              <div 
+          {loading ? (
+            <div className="flex items-center justify-center h-full text-[#888]">Loading products...</div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
+              {filteredProducts.map((product) => (
+                <div 
                 key={product.id} 
                 className="group cursor-pointer rounded-xl border border-[#eaeaea] bg-white p-3 hover:border-[#111] hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all flex flex-col"
                 onClick={() => {
@@ -76,6 +113,7 @@ export default function POSPage() {
               </div>
             ))}
           </div>
+          )}
         </ScrollArea>
       </div>
 
