@@ -8,8 +8,7 @@ import {
   ShoppingCart, 
   BarChart3, 
   Settings,
-  Store,
-  LogOut
+  Store
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store/useAppStore";

@@ -41,7 +41,7 @@ export default function SettingsPage() {
           <Card className="border-[#eaeaea] shadow-sm bg-white">
             <CardHeader className="border-b border-[#eaeaea] pb-4 mb-4">
               <CardTitle className="text-[15px] font-medium text-[#111]">Store Information</CardTitle>
-              <CardDescription className="text-xs text-[#888]">Update your store's basic information.</CardDescription>
+              <CardDescription className="text-xs text-[#888]">Update your store&apos;s basic information.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={saveSettings} className="space-y-5">

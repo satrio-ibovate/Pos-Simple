@@ -94,7 +94,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   <div className="font-medium text-[14px] text-[#111] bg-[#fafafa] px-2 py-1 rounded-md border border-transparent group-hover:border-[#eaeaea] transition-colors">
-                    {Math.floor(Math.random() * 50) + 20} sales
+                    {30 + (i * 12)} sales
                   </div>
                 </div>
               ))}
